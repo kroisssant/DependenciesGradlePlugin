@@ -5,8 +5,7 @@ import org.gradle.internal.enterprise.test.FileProperty
 import java.io.File
 
 open class GradleExtensions {
-     var dependencyFile: File = File("./")
+     var dependencyFile: File? = null
      var fileType: String = "auto"
-     var installMode: String = "auto"
 
 }

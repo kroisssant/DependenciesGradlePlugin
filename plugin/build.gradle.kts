@@ -1,9 +1,10 @@
 plugins {
     `java-gradle-plugin`
-
+    id("java")
 
     kotlin("jvm") version "2.0.21"
     kotlin("plugin.serialization") version "2.0.20"
+    id ("maven-publish")
 
 }
 
@@ -18,14 +19,18 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-gradlePlugin {
-    // Define the plugin
-    val dependencyFromFile by plugins.creating {
-        id = "com.kroissant.dependencyFromFile"
-        implementationClass = "com.kroissant.GradlePluginPlugin"
-    }
-}
+group = "com.kroissant"
+version = 1.0
 
+gradlePlugin {
+    plugins {
+        register("dependencyFromFile") {
+            id = "com.kroissant.dependencyFromFile"
+            implementationClass = "com.kroissant.GradlePluginPlugin"
+        }
+    }
+
+}
 // Add a source set for the functional test suite
 val functionalTestSourceSet = sourceSets.create("functionalTest") {
 }
@@ -52,3 +57,8 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
+publishing {
+    repositories {
+        mavenLocal()
+    }
+}

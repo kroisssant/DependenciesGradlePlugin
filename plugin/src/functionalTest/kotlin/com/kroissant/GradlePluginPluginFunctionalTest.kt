@@ -9,6 +9,7 @@ import kotlin.test.Test
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.io.TempDir
 
+
 class GradlePluginPluginFunctionalTest {
 
     @field:TempDir
@@ -19,19 +20,24 @@ class GradlePluginPluginFunctionalTest {
     private val depFile by lazy {projectDir.resolve("deps.txt")}
     // https://github.com/gradle/kotlin-dsl-samples/issues/1268
     @Test
-    fun `can run task auto`() {
+    fun `can run task auto json`() {
         // Set up the test build
-        depFile.writeText("""[{
-            "configurationName":"implementation"
-            "name":"sad"
-            "version":"1"
-            }]
+        depFile.writeText("""
+            [
+            {
+                "configurationName":"implementation",
+                "group":"io.github.ollama4j",
+                "name" : "ollama4j",
+                "version" : "1.0.79"
+            }
+            ]
+
         """.trimMargin())
         settingsFile.writeText("")
         buildFile.writeText("""
             plugins {
-                id('com.kroissant.dependencyFromFile')
                 id('java')
+                id('com.kroissant.dependencyFromFile')
             }
             DependencyFromFileConfig {
                 dependencyFile=file('${projectDir.path}/deps.txt')
@@ -43,11 +49,167 @@ class GradlePluginPluginFunctionalTest {
         runner.forwardOutput()
 
         runner.withPluginClasspath()
-        runner.withArguments("dependencyFromFile")
+        runner.withArguments("dependencies")
         runner.withProjectDir(projectDir)
         val result = runner.build()
 
         // Verify the result
-        assertTrue(result.output.contains("data"))
+        assertTrue(result.output.toString().contains("ollama4j"))
+    }
+    @Test
+    fun `can run task auto props`() {
+        // Set up the test build
+        depFile.writeText("""
+            ollama4j: implementation io.github.ollama4j 1.0.79
+
+        """.trimMargin())
+        settingsFile.writeText("")
+        buildFile.writeText("""
+            plugins {
+                id('java')
+                id('com.kroissant.dependencyFromFile')
+            }
+            DependencyFromFileConfig {
+                dependencyFile=file('${projectDir.path}/deps.txt')
+            }
+        """.trimIndent())
+
+        // Run the build
+        val runner = GradleRunner.create()
+        runner.forwardOutput()
+
+        runner.withPluginClasspath()
+        runner.withArguments("dependencies")
+        runner.withProjectDir(projectDir)
+        val result = runner.build()
+
+        // Verify the result
+        assertTrue(result.output.toString().contains("ollama4j"))
+    }
+    @Test
+    fun `can run task json`() {
+        // Set up the test build
+        depFile.writeText("""
+            [
+            {
+                "configurationName":"implementation",
+                "group":"io.github.ollama4j",
+                "name" : "ollama4j",
+                "version" : "1.0.79"
+            }
+            ]
+
+        """.trimMargin())
+        settingsFile.writeText("")
+        buildFile.writeText("""
+            plugins {
+                id('java')
+                id('com.kroissant.dependencyFromFile')
+            }
+            DependencyFromFileConfig {
+                dependencyFile=file('${projectDir.path}/deps.txt')
+                fileType="json"
+            }
+        """.trimIndent())
+
+        // Run the build
+        val runner = GradleRunner.create()
+        runner.forwardOutput()
+
+        runner.withPluginClasspath()
+        runner.withArguments("dependencies")
+        runner.withProjectDir(projectDir)
+        val result = runner.build()
+
+        // Verify the result
+        assertTrue(result.output.toString().contains("ollama4j"))
+    }
+    @Test
+    fun `can run task props`() {
+        // Set up the test build
+        depFile.writeText("""
+            ollama4j: implementation io.github.ollama4j 1.0.79
+        """.trimMargin())
+        settingsFile.writeText("")
+        buildFile.writeText("""
+            plugins {
+                id('java')
+                id('com.kroissant.dependencyFromFile')
+            }
+            DependencyFromFileConfig {
+                dependencyFile=file('${projectDir.path}/deps.txt')
+                fileType="properties"
+            }
+        """.trimIndent())
+
+        // Run the build
+        val runner = GradleRunner.create()
+        runner.forwardOutput()
+
+        runner.withPluginClasspath()
+        runner.withArguments("dependencies")
+        runner.withProjectDir(projectDir)
+        val result = runner.build()
+
+        // Verify the result
+        assertTrue(result.output.toString().contains("ollama4j"))
+    }
+    @Test
+    fun `can run no extension`() {
+        // Set up the test build
+        depFile.writeText("""
+            [
+            {
+                "configurationName":"implementation",
+                "group":"io.github.ollama4j",
+                "name" : "ollama4j",
+                "version" : "1.0.79"
+            }
+            ]
+
+        """.trimMargin())
+        settingsFile.writeText("")
+        buildFile.writeText("""
+            plugins {
+                id('java')
+                id('com.kroissant.dependencyFromFile')
+           }
+        """.trimIndent())
+
+        // Run the build
+        val runner = GradleRunner.create()
+        runner.forwardOutput()
+
+        runner.withPluginClasspath()
+        runner.withArguments("dependencies")
+        runner.withProjectDir(projectDir)
+        val result = runner.build()
+
+        // Verify the result
+        assertTrue(result.output.toString().contains("ollama4j"))
+    }
+    @Test
+    fun `can run no file`() {
+        // Set up the test build
+
+        settingsFile.writeText("")
+        buildFile.writeText("""
+            plugins {
+                id('com.kroissant.dependencyFromFile')
+            }
+        """.trimIndent())
+
+        // Run the build
+        val runner = GradleRunner.create()
+        runner.forwardOutput()
+
+        runner.withPluginClasspath()
+        runner.withArguments("dependencies")
+        runner.withProjectDir(projectDir)
+        val result = runner.build()
+
+        // Verify the result
+        assertTrue(File("${projectDir}/deps.txt").exists())
     }
 }
+
