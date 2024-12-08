@@ -8,7 +8,7 @@ import org.gradle.api.Project
 import java.io.File
 import java.util.*
 
-class GradlePluginPlugin: Plugin<Project> {
+class GradlePlugin: Plugin<Project> {
 
     override fun apply(project: Project) {
         val extensions = project.extensions.create("DependencyFromFileConfig", GradleExtensions::class.java)

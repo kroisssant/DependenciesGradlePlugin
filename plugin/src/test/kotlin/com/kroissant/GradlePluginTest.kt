@@ -10,7 +10,7 @@ import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.io.TempDir
 
 
-class GradlePluginPluginFunctionalTest {
+class GradlePluginTest {
 
     @field:TempDir
     lateinit var projectDir: File
