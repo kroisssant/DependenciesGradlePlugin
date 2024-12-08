@@ -1,25 +1,24 @@
 # Dependency From File
 
-This simple gradle plugins allows the user to create a file with all depedendencies for a project similar to the requierments.txt used by python.
+This simple gradle plugin allows the user to create a file with all dependencies for a project similar to the requirements.txt used by python.
 
 # Getting started 
-Clone this repository with this command
+1. Clone this repository:
 ```txt
-git clone https://github
+git clone https://github.com/kroisssant/DependenciesGradlePlugin
 ```
-After that enter the project file
+2. After that enter the project directory:
 ```txt
-cd 
+cd ./DependenciesGradlePlugin
 ```
-After that you can publish the plugin to your mavelLocal repository with the following command
+3. After that you can publish the plugin to your mavelLocal repository:
 ```txt
 ./gradlew publishToMavenLocal
 ```
 Now that the plugin is added to your local maven repository we can use it in another project.\
-This can be done by adding the following lines to the build.gradle and to the settings.gradle
+To do that you need to:
+1. Add this to your `settings.gradle`:
 ```
-settings.gradle
-
 pluginManagement {
     repositories {
         mavenLocal()
@@ -31,19 +30,18 @@ pluginManagement {
 
 }
 ```
+2. Add this to your `build.gradle`
 ```
-build.gradle
-
 plugins {
     id("com.kroissant.dependencyFromFile") version "1.0"
 }
 ```
 This is all you need to do to use this plugin. \
-After you sync the gradle you will notice a new file
-**deps.txt**
+After you sync the gradle you will notice a new file `deps.txt`.\
 In this file you can add your dependencies.
-This can be done using one of two file types. \
+## Supported formats
 ### **JSON**
+#### Foramt:
 ```json
 [
   [
@@ -57,12 +55,39 @@ This can be done using one of two file types. \
   
 ]
 ```
+#### Example:
+```json
+[
+    {
+        "configurationName":"implementation",
+        "group":"io.github.ollama4j",
+        "name" : "ollama4j",
+        "version" : "1.0.79"
+    }
+]
+```
+
 ### **PROPERTIES**
+#### Format:
 ```properties
 name: configurationName group version
 ```
+#### Example:
+```properties
+ollama4j: implementation io.github.ollama4j 1.0.79
+```
 
 ## Extension
-This plugin has an extention where you can change the default path of the deps.txt file \
-Also you can determine if the file has the propertie format or the json format.\
-This are optional.
+The plugin includes an extentions that allows you to:
+1. Change the path to the dependency file and name
+2. Set the file format you will use (by default the program tries json and then properties)
+
+This settings are optional and by default the dependency file will be named `deps.txt` and will live in the project directory.
+
+### How to use
+```kotlin
+DependencyFromFileConfig {
+    dependencyFile=file("Path/to/file")
+    fileType=<"json"/"properties">
+}
+```
