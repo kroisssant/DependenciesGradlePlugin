@@ -7,11 +7,11 @@ This simple gradle plugin allows the user to create a file with all dependencies
 ```txt
 git clone https://github.com/kroisssant/DependenciesGradlePlugin
 ```
-2. After that enter the project directory:
+2. Enter the project directory:
 ```txt
 cd ./DependenciesGradlePlugin
 ```
-3. After that you can publish the plugin to your mavelLocal repository:
+3. Publish the plugin to your mavelLocal repository:
 ```txt
 ./gradlew publishToMavenLocal
 ```
@@ -41,7 +41,7 @@ After you sync the gradle you will notice a new file `deps.txt`.\
 In this file you can add your dependencies.
 ## Supported formats
 ### **JSON**
-#### Foramt:
+#### Format:
 ```json
 [
   [
@@ -78,11 +78,11 @@ ollama4j: implementation io.github.ollama4j 1.0.79
 ```
 
 ## Extension
-The plugin includes an extentions that allows you to:
+The plugin includes an extension that allows you to:
 1. Change the path to the dependency file and name
 2. Set the file format you will use (by default the program tries json and then properties)
 
-This settings are optional and by default the dependency file will be named `deps.txt` and will live in the project directory.
+These settings are optional and by default the dependency file will be named `deps.txt` and will live in the project directory.
 
 ### How to use
 ```kotlin
